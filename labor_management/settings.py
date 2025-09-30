@@ -1,26 +1,19 @@
 import os
 from pathlib import Path
-import pymysql
-pymysql.install_as_MySQLdb()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+import dj_database_url  # pip install dj-database-url psycopg2-binary
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-dev-key')
+SECRET_KEY = 'django-insecure-dev-key'
+DEBUG = True
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
-
-# Allow Vercel domain + localhost
 ALLOWED_HOSTS = [
-    'localhost', 
-    '127.0.0.1', 
-    ".vercel.app"
+    'localhost',
+    '127.0.0.1',
+    '.vercel.app'
 ]
 
-
-# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -35,7 +28,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # For static files in production
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -64,49 +57,36 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'labor_management.wsgi.application'
 
-# Database
+# ---------------- Supabase Postgres Database ----------------
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DB_NAME', 'freedb_ummara ems'),
-        'USER': os.environ.get('DB_USER', 'freedb_ummara12'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 't?7%xS@$S2rVNyt'),
-        'HOST': os.environ.get('DB_HOST', 'sql.freedb.tech'),
-        'PORT': os.environ.get('DB_PORT', '3306'),
-    }
+    "default": dj_database_url.config(
+        default="postgresql://postgres:[orchard12@]@db.agtzxtiqsieldeqwvilh.supabase.co:5432/postgres"
+    )
 }
+# ------------------------------------------------------------
 
-# Password validation
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator', },
 ]
 
-# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Karachi'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles_build'  # WhiteNoise & Vercel expects this folder
+STATIC_ROOT = BASE_DIR / 'staticfiles_build'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Login URLs
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/login/'
-
-# Optional: Collect static files before deployment
-# python manage.py collectstatic --noinput
