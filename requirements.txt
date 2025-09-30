@@ -6,3 +6,4 @@ python-decouple==3.8
 pytz==2025.2
 pymysql
 python-docx
+dj-database-url>=2.1
